@@ -205,6 +205,33 @@ cython_debug/
 # Temporary file for partial code execution
 tempCodeRunnerFile.py
 
+# Ferramentas de IA e estado pessoal (a aplicação não depende deles)
+.agents/
+.codex/
+.aws/
+.opencode/
+.impeccable/
+.claude/
+AGENTS.md
+PRODUCT.md
+DESIGN.md
+*.session
+*.prompt.log
+.env.*
+!.env.example
+!**/.env.example
+node_modules/
+.angular/
+playwright-report/
+test-results/
+*.sqlite
+*.sqlite3
+*.db
+*.db-*
+backend/uploads/
+backend/.session-secret
+tmp/
+
 # Ruff stuff:
 .ruff_cache/
 
