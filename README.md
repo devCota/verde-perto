@@ -2,18 +2,38 @@
 
 **Compartilhe o que a natureza oferece.**
 
+**[Acesse a demonstração online do VerdePerto](https://devcota.github.io/verde-perto/)**
+
 Plataforma comunitária para doar, trocar e vender produtos naturais cultivados localmente. Quem tem excedentes publica uma oferta; quem procura descobre na lista ou no mapa e combina a retirada pelo chat.
 
 Projeto acadêmico de Engenharia de Software, com integração real entre Angular, FastAPI e banco relacional. O fluxo central é **PUBLICAR → ENCONTRAR → COMBINAR**.
 
-## Apresentação no GitHub Pages, sem servidor
+## Demonstração publicada no GitHub Pages
 
-Existe também um **modo de demonstração interativa**, inteiramente no navegador:
+O [VerdePerto online](https://devcota.github.io/verde-perto/) é uma **demonstração interativa**, inteiramente no navegador:
 cadastro e login de teste, criação/edição/exclusão de ofertas com fotos, favoritos,
-perfil, busca, mapa e chat com respostas simuladas. Os dados ficam neste navegador;
-alterações não são compartilhadas entre visitantes. Use apenas informações fictícias.
+perfil, busca, filtros, mapa e chat com respostas simuladas. Não precisa instalar
+nada, iniciar a API ou manter o computador do apresentador ligado.
 
-Para experimentar sem iniciar Python ou banco de dados:
+Para apresentar ou avaliar:
+
+1. Abra o link e explore as ofertas na lista ou no mapa, sem precisar de conta.
+2. Clique em **Usar conta de teste** e escolha **Ana**, **João** ou **Maria**.
+   Também é possível criar uma conta com dados fictícios.
+3. Publique uma oferta, edite seus dados e quantidade, salve favoritos ou inicie
+   uma conversa. **Trocar conta** permite experimentar outro perfil.
+4. Use **Recomeçar demonstração** e confirme para apagar as alterações locais e
+   restaurar os exemplos iniciais.
+
+**Limites da demonstração:** os dados ficam apenas neste navegador e endereço do
+site; recarregar a página preserva as alterações, mas outro navegador ou dispositivo
+começa com seus próprios exemplos. O chat recebe respostas automáticas identificadas
+como **Resposta simulada**; nenhuma mensagem chega a pessoas reais. Fotos escolhidas
+ficam no navegador, sem upload ao backend. Limpar os dados do site apaga as alterações.
+O fundo do mapa usa OpenStreetMap e depende de internet. Use apenas dados e senhas
+fictícios: as contas locais não oferecem autenticação de produção.
+
+Para executar essa mesma demonstração localmente, com Node e npm instalados:
 
 ```bash
 cd frontend
@@ -21,14 +41,30 @@ npm ci
 npm run start:demo
 ```
 
-Abra **http://localhost:4300** e use **Usar conta de teste**. Ana, João e Maria já
-estão disponíveis; **Recomeçar demonstração** restaura os exemplos para outra apresentação.
+Abra **http://localhost:4300**. Esse comando inicia somente a interface; Python e
+banco de dados não são necessários neste modo.
 
-Para publicar, envie as alterações para o GitHub, selecione **Settings → Pages →
-Source: GitHub Actions** e execute **Actions → Publicar demonstração do VerdePerto →
-Run workflow**. O endereço esperado após a publicação é
-`https://devcota.github.io/verde-perto/`; confirme a URL no resultado do workflow.
-Seu computador não precisa permanecer ligado. Veja o [passo a passo e os limites da demonstração](docs/demo-github-pages.md).
+**Atualizar a publicação:** alterações da interface em `frontend/` ou do workflow
+enviadas à branch `main` disparam a publicação automaticamente. Acompanhe em
+**Actions → Publicar demonstração do VerdePerto**; **Run workflow** permite publicar
+manualmente. O workflow compila e publica apenas `frontend/dist/demo/browser`, sem
+o backend, banco ou arquivos `.env`. Alterações somente no README não disparam deploy.
+
+**Verificação:** sete testes Playwright passaram localmente, e o build foi aprovado
+no GitHub Actions. Após a publicação, login, criação, edição e persistência ao
+recarregar foram conferidos no endereço público, sem chamadas à API ou erros de
+JavaScript. O workflow de publicação não repete os testes de navegador; execute-os
+localmente antes de enviar mudanças:
+
+```bash
+cd frontend
+npm run build:demo
+npx playwright install chromium
+npm run test:demo
+```
+
+Veja o [guia da demonstração](docs/demo-github-pages.md) para contas, publicação,
+armazenamento e detalhes da simulação.
 
 As seções seguintes descrevem a versão completa, com servidor e banco de dados.
 
@@ -259,11 +295,17 @@ Resultados e limites efetivamente verificados estão em [docs/verificacao.md](do
 - No Supabase, não exponha as tabelas pela Data API: desabilite a exposição ou habilite RLS sem políticas públicas. A aplicação acessa dados exclusivamente pelo backend.
 - `.agents/`, `.codex/`, `.opencode/`, `.impeccable/`, contextos de IA, `.env`, bancos, uploads, caches e dependências estão ignorados. A aplicação executa sem essas ferramentas.
 
-## Publicação futura
+## Hospedar a versão completa com backend
 
-Configuração preparada para Angular no Cloudflare Pages, API no Render e PostgreSQL/Storage no Supabase. `render.yaml`, a Pages Function e o fallback SPA acompanham o projeto. Criação das contas, segredos, domínio e publicação dependem do responsável.
+O GitHub Pages acima publica a demonstração local ao navegador. Para compartilhar
+cadastros, anúncios, fotos e mensagens entre pessoas e dispositivos, a versão
+completa exige API, banco e armazenamento hospedados.
 
-Consulte [docs/deploy.md](docs/deploy.md) para passos, variáveis, armazenamento persistente e limites dos planos verificados nas fontes oficiais. A publicação real e a integração com credenciais externas não foram realizadas nesta entrega.
+Existe configuração preparada para Angular no Cloudflare Pages, API no Render e
+PostgreSQL/Storage no Supabase. `render.yaml`, a Pages Function e o fallback SPA
+acompanham o projeto. Consulte [docs/deploy.md](docs/deploy.md) para passos e
+variáveis. A publicação dessa versão com backend e a integração com credenciais
+externas ainda não foram realizadas; dependem das contas e configurações do responsável.
 
 ## Estrutura
 
