@@ -235,6 +235,16 @@ Os domínios `.example` são fictícios e não recebem e-mails. A demonstração
 
 Use navegador normal e janela anônima para conversar entre duas contas. O roteiro completo está em [docs/fluxos.md](docs/fluxos.md).
 
+## Hospedar no próprio computador e acessar pela internet
+
+Para uma apresentação, execute o modo temporário no Linux. Ele serve o Angular compilado e a API na mesma origem, usando o banco e as fotos locais, e mostra um link público HTTPS pela Cloudflare. Não instala serviços permanentes nem exige conta ou domínio.
+
+```bash
+python3 scripts/hosting.py present
+```
+
+`present` baixa o conector oficial com verificação SHA-256, compila o frontend e inicia a apresentação. Deixe o terminal aberto; `Ctrl+C` encerra o site e o túnel. O último link também fica em `.local-hosting/presentation-url.txt`, ignorado pelo Git. Qualquer pessoa com o link pode abrir as páginas públicas e se cadastrar; conversas e dados privados continuam exigindo autenticação. O tráfego passa pela Cloudflare. O computador precisa permanecer ligado, conectado e sem suspender; o endereço muda ao reiniciar o túnel. Veja [instalação, controle e remoção da hospedagem local](docs/hospedagem-local.md).
+
 ## Configuração
 
 A API lê **`backend/.env`**, ou variáveis de ambiente do processo. O `.env.example` da raiz mostra a variável usada pelo proxy de hospedagem; não substitui o arquivo do backend.
@@ -242,7 +252,7 @@ A API lê **`backend/.env`**, ou variáveis de ambiente do processo. O `.env.exa
 | Variável | Valor local / finalidade |
 |---|---|
 | `DATABASE_URL` | `sqlite:///./verdeperto.db`; em produção, conexão PostgreSQL com SSL |
-| `ENVIRONMENT` | `development` local; `production` ativa cookie Secure e exige storage persistente para upload |
+| `ENVIRONMENT` | `development` local; `production` ativa cookie Secure e exige storage persistente para upload; `local-hosting` usa HTTPS com arquivos locais |
 | `CORS_ORIGINS` | Lista JSON de origens autorizadas, sem `*` com credenciais |
 | `UPLOAD_DIR` | `./uploads`, relativo ao diretório do backend |
 | `SESSION_DAYS` | Expiração da sessão, padrão 7 dias |
@@ -251,6 +261,7 @@ A API lê **`backend/.env`**, ou variáveis de ambiente do processo. O `.env.exa
 | `STORAGE_BUCKET` | Bucket público de imagens, padrão `offers` |
 | `API_ORIGIN` | Apenas na Pages Function: URL HTTPS da API hospedada |
 | `ALLOW_DEMO_SEED` | Somente `true` permite seed explícito em produção; não habilitar por padrão |
+| `FRONTEND_DIST` | Caminho opcional do build Angular que a API deve servir; usado pelo gerenciador de hospedagem local |
 
 O PostgreSQL usa `psycopg`; strings `postgres://` e `postgresql://` são normalizadas pelo backend. Nunca coloque chaves ou conexões secretas no frontend.
 

@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     supabase_url: str = ""
     supabase_service_role_key: str = ""
     storage_bucket: str = "offers"
+    frontend_dist: str = ""
 
 
 settings = Settings()

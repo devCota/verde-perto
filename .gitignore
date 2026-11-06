@@ -231,6 +231,7 @@ test-results/
 backend/uploads/
 backend/.session-secret
 tmp/
+.local-hosting/
 
 # Ruff stuff:
 .ruff_cache/

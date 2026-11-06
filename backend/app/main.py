@@ -60,7 +60,14 @@ async def lifespan(app):
     yield
 
 
-app = FastAPI(title="VerdePerto API", version="1.0.0", lifespan=lifespan)
+app = FastAPI(
+    title="VerdePerto API",
+    version="1.0.0",
+    lifespan=lifespan,
+    docs_url=None if settings.environment == "local-hosting" else "/docs",
+    redoc_url=None if settings.environment == "local-hosting" else "/redoc",
+    openapi_url=None if settings.environment == "local-hosting" else "/openapi.json",
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -151,7 +158,7 @@ def new_session(response, db, user):
         COOKIE,
         raw,
         httponly=True,
-        secure=settings.environment == "production",
+        secure=settings.environment in {"production", "local-hosting"},
         samesite="lax",
         max_age=settings.session_days * 86400,
         path="/api",
@@ -683,3 +690,10 @@ def media(filename: str):
     if not path.is_file():
         fail(404, "Imagem não encontrada.")
     return FileResponse(path, media_type="image/jpeg")
+
+
+if settings.frontend_dist:
+    from .hosting import mount_frontend
+
+    # A montagem fica depois das rotas /api para preservar suas respostas.
+    mount_frontend(app, settings.frontend_dist)
