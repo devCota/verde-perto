@@ -41,7 +41,7 @@ até restaurar os exemplos; a nova senha funciona pelo formulário normal.
 3. A publicação começa automaticamente ao enviar alterações da interface ou do
    workflow para `main`. Acompanhe em **Actions → Publicar demonstração do VerdePerto**.
    Também é possível iniciar por **Run workflow**, escolhendo `main`. O GitHub
-   instala as dependências, compila, testa e publica apenas `frontend/dist/demo/browser`.
+   instala as dependências, compila e publica apenas `frontend/dist/demo/browser`.
 4. Aguarde a execução terminar com sucesso e copie o endereço mostrado no job
    `deploy` ou em **Settings → Pages → Visit site**.
 
@@ -102,6 +102,10 @@ Os testes usam o build final em um servidor estritamente estático sob
 bloqueadas. Exercitam as jornadas e a persistência com armazenamento isolado dos
 dados pessoais do navegador. O fundo externo do mapa é bloqueado nos testes;
 marcadores e navegação são verificados sem depender de um serviço externo.
+
+Execute esses testes localmente antes de enviar mudanças na demonstração. O
+workflow de publicação compila e publica; não instala Chromium nem repete os
+testes de navegador no servidor do GitHub.
 
 `npm run build` e `npm start` continuam destinados ao sistema completo com API.
 O modo de demonstração usa a configuração Angular `demo` e é gerado em outra
