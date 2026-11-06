@@ -30,7 +30,7 @@ import { Icon } from "./shared";
       <section class="wrap detail-layout">
         <div class="detail-photo">
           <img
-            [src]="l.image_url || '/assets/product-default.svg'"
+            [src]="l.image_url || 'assets/product-default.svg'"
             [alt]="l.title"
             (error)="fallback($event)"
           /><span [class]="'tag ' + l.offer_type">{{
@@ -205,6 +205,6 @@ export class Detail implements OnInit {
   fallback(e: Event) {
     const image = e.target as HTMLImageElement;
     image.onerror = null;
-    image.src = "/assets/product-default.svg";
+    image.src = "assets/product-default.svg";
   }
 }

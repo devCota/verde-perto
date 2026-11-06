@@ -1,7 +1,9 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
-  "cli": { "analytics": false },
+  "cli": {
+    "analytics": false
+  },
   "projects": {
     "verdeperto": {
       "projectType": "application",
@@ -14,7 +16,12 @@
             "browser": "src/main.ts",
             "tsConfig": "tsconfig.app.json",
             "index": "src/index.html",
-            "assets": [{ "glob": "**/*", "input": "public" }],
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "public"
+              }
+            ],
             "styles": [
               "node_modules/leaflet/dist/leaflet.css",
               "src/styles.css"
@@ -32,14 +39,32 @@
                 }
               ]
             },
-            "development": { "optimization": false, "sourceMap": true }
+            "development": {
+              "optimization": false,
+              "sourceMap": true
+            },
+            "demo": {
+              "fileReplacements": [
+                {
+                  "replace": "src/app/runtime.ts",
+                  "with": "src/app/runtime.demo.ts"
+                }
+              ],
+              "baseHref": "./",
+              "outputPath": "dist/demo"
+            }
           },
           "defaultConfiguration": "production"
         },
         "serve": {
           "builder": "@angular/build:dev-server",
           "configurations": {
-            "development": { "buildTarget": "verdeperto:build:development" }
+            "development": {
+              "buildTarget": "verdeperto:build:development"
+            },
+            "demo": {
+              "buildTarget": "verdeperto:build:development,demo"
+            }
           },
           "defaultConfiguration": "development"
         }

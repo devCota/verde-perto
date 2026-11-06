@@ -6,6 +6,32 @@ Plataforma comunitária para doar, trocar e vender produtos naturais cultivados 
 
 Projeto acadêmico de Engenharia de Software, com integração real entre Angular, FastAPI e banco relacional. O fluxo central é **PUBLICAR → ENCONTRAR → COMBINAR**.
 
+## Apresentação no GitHub Pages, sem servidor
+
+Existe também um **modo de demonstração interativa**, inteiramente no navegador:
+cadastro e login de teste, criação/edição/exclusão de ofertas com fotos, favoritos,
+perfil, busca, mapa e chat com respostas simuladas. Os dados ficam neste navegador;
+alterações não são compartilhadas entre visitantes. Use apenas informações fictícias.
+
+Para experimentar sem iniciar Python ou banco de dados:
+
+```bash
+cd frontend
+npm ci
+npm run start:demo
+```
+
+Abra **http://localhost:4300** e use **Usar conta de teste**. Ana, João e Maria já
+estão disponíveis; **Recomeçar demonstração** restaura os exemplos para outra apresentação.
+
+Para publicar, envie as alterações para o GitHub, selecione **Settings → Pages →
+Source: GitHub Actions** e execute **Actions → Publicar demonstração do VerdePerto →
+Run workflow**. O endereço esperado após a publicação é
+`https://devcota.github.io/verde-perto/`; confirme a URL no resultado do workflow.
+Seu computador não precisa permanecer ligado. Veja o [passo a passo e os limites da demonstração](docs/demo-github-pages.md).
+
+As seções seguintes descrevem a versão completa, com servidor e banco de dados.
+
 ## O que está implementado
 
 - Cadastro, login, logout e recuperação de sessão ao recarregar a página.

@@ -2,6 +2,7 @@ import { defineConfig } from "@playwright/test";
 import { resolve } from "node:path";
 export default defineConfig({
   testDir: "./tests",
+  testIgnore: "**/demo/**",
   timeout: 90000,
   expect: { timeout: 10000 },
   workers: 1,

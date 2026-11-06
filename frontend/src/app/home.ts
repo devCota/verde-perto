@@ -40,7 +40,7 @@ import { Page, Listing, categories } from "./data";
       <div class="hero-visual">
         <img
           class="garden-photo"
-          src="/assets/herbs.jpg"
+          src="assets/herbs.jpg"
           alt="Pequenas mudas crescendo em recipientes de cultivo"
         />
         <div class="harvest-note">

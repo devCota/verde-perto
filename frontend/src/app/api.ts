@@ -3,20 +3,29 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { Router, CanActivateFn } from "@angular/router";
 import { firstValueFrom } from "rxjs";
 import { User } from "./data";
+import { demoMode } from "./runtime";
 
 @Injectable({ providedIn: "root" })
 export class Api {
   http = inject(HttpClient);
   get<T>(path: string, params: Record<string, string | number> = {}) {
+    if (demoMode)
+      return import("./demo-api").then((m) => m.demoRequest<T>("GET", path, {}, params));
     return firstValueFrom(this.http.get<T>("/api" + path, { params }));
   }
   post<T>(path: string, body: unknown = {}) {
+    if (demoMode)
+      return import("./demo-api").then((m) => m.demoRequest<T>("POST", path, body));
     return firstValueFrom(this.http.post<T>("/api" + path, body));
   }
   patch<T>(path: string, body: unknown) {
+    if (demoMode)
+      return import("./demo-api").then((m) => m.demoRequest<T>("PATCH", path, body));
     return firstValueFrom(this.http.patch<T>("/api" + path, body));
   }
   delete(path: string) {
+    if (demoMode)
+      return import("./demo-api").then((m) => m.demoRequest("DELETE", path));
     return firstValueFrom(this.http.delete("/api" + path));
   }
 }

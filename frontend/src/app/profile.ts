@@ -5,6 +5,7 @@ import { DatePipe } from "@angular/common";
 import { Api, Auth, Notice, errorText } from "./api";
 import { User, Listing, Page } from "./data";
 import { Card, Icon } from "./shared";
+import { demoMode } from "./runtime";
 
 @Component({
   standalone: true,
@@ -184,7 +185,7 @@ export class Profile implements OnInit {
     try {
       await this.api.post("/users/me/password", this.password);
       this.password = { current_password: "", new_password: "" };
-      this.notice.show("Senha atualizada. Outras sessões foram encerradas.");
+      this.notice.show(demoMode ? "Senha da conta de teste atualizada neste navegador." : "Senha atualizada. Outras sessões foram encerradas.");
     } catch (e) {
       this.error.set(errorText(e));
     } finally {

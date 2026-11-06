@@ -11,6 +11,7 @@ import {
   inject,
 } from "@angular/core";
 import { Router } from "@angular/router";
+import { Location } from "@angular/common";
 import * as L from "leaflet";
 import { Listing, offerNames } from "./data";
 
@@ -32,6 +33,7 @@ export class OfferMap implements AfterViewInit, OnChanges, OnDestroy {
   @Input() lng = -44.04;
   @ViewChild("canvas", { static: true }) canvas!: ElementRef<HTMLDivElement>;
   private router = inject(Router);
+  private location = inject(Location);
   private map?: L.Map;
   private markers?: L.LayerGroup;
   ngAfterViewInit() {
@@ -74,7 +76,9 @@ export class OfferMap implements AfterViewInit, OnChanges, OnDestroy {
         const region = document.createElement("p");
         region.textContent = `${listing.neighborhood} · ${listing.quantity} ${listing.unit}`;
         const link = document.createElement("a");
-        link.href = "/ofertas/" + listing.id;
+        link.href = this.location.prepareExternalUrl(
+          this.router.serializeUrl(this.router.createUrlTree(["/ofertas", listing.id])),
+        );
         link.textContent = "Ver oferta →";
         link.addEventListener("click", (event) => {
           event.preventDefault();

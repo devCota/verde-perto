@@ -43,7 +43,7 @@ import { Card, Icon } from "./shared";
             <article class="manage-item">
               <a [routerLink]="['/ofertas', l.id]"
                 ><img
-                  [src]="l.image_url || '/assets/product-default.svg'"
+                  [src]="l.image_url || 'assets/product-default.svg'"
                   [alt]="l.title"
               /></a>
               <div class="manage-copy">

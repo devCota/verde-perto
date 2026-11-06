@@ -3,6 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { Auth, errorText } from "./api";
 import { Icon } from "./shared";
+import { demoMode } from "./runtime";
 
 @Component({
   standalone: true,
@@ -14,7 +15,7 @@ import { Icon } from "./shared";
         Entre para compartilhar uma colheita, encontrar uma muda e fazer parte
         da sua vizinhança.
       </p>
-      <img src="/assets/herbs.jpg" alt="Cultivo de plantas em uma horta" />
+      <img src="assets/herbs.jpg" alt="Cultivo de plantas em uma horta" />
     </div>
     <div class="form-card">
       <a routerLink="/" class="back-link"
@@ -32,6 +33,21 @@ import { Icon } from "./shared";
             : "Entre na sua conta para continuar."
         }}
       </p>
+      @if (demo) {
+        <div class="demo-accounts">
+          <h3>Experimente com uma conta pronta</h3>
+          <p>Perfis fictícios. Você também pode criar sua própria conta de teste.</p>
+          <div class="demo-account-actions">
+            @for (person of demoPeople; track person.email) {
+              <button type="button" class="button secondary"
+                [disabled]="busy()" (click)="enterDemo(person.email)">
+                Entrar como {{ person.name }}
+              </button>
+            }
+          </div>
+          <small>Use apenas dados e senhas fictícios nesta demonstração.</small>
+        </div>
+      }
       <form #form="ngForm" (ngSubmit)="submit()">
         @if (register) {
           <label
@@ -139,6 +155,26 @@ export class AuthPage {
   };
   error = signal("");
   busy = signal(false);
+  demo = demoMode;
+  demoPeople = [
+    { name: "Ana", email: "ana@verdeperto.example" },
+    { name: "João", email: "joao@verdeperto.example" },
+    { name: "Maria", email: "maria@verdeperto.example" },
+  ];
+  async enterDemo(email: string) {
+    this.busy.set(true);
+    this.error.set("");
+    try {
+      await this.auth.login({ email, password: "DemoVerde123!" });
+      await this.router.navigateByUrl(
+        this.next.startsWith("/") && !this.next.startsWith("//") ? this.next : "/explorar",
+      );
+    } catch (e) {
+      this.error.set(errorText(e));
+    } finally {
+      this.busy.set(false);
+    }
+  }
   async submit() {
     this.busy.set(true);
     this.error.set("");

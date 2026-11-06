@@ -50,6 +50,7 @@ export interface Message {
   sender_id: number;
   content: string;
   created_at: string;
+  simulated?: boolean;
 }
 export const categories = [
   { id: "fruits", name: "Frutas", icon: "apple" },

@@ -14,6 +14,7 @@ import { Subscription } from "rxjs";
 import { Api, Auth, errorText } from "./api";
 import { Conversation, Message } from "./data";
 import { Icon } from "./shared";
+import { demoMode } from "./runtime";
 
 @Component({
   standalone: true,
@@ -21,6 +22,12 @@ import { Icon } from "./shared";
   template: ` <section class="wrap page-head">
       <h1>Boas conversas, boas trocas.</h1>
       <p>Combine os detalhes da retirada por aqui.</p>
+      @if (demo) {
+        <p class="privacy-note">
+          <vp-icon name="MessagesSquare" /> Conversa de demonstração. As respostas
+          são simuladas; nenhuma mensagem é enviada a pessoas reais.
+        </p>
+      }
     </section>
     <section class="wrap chat-layout" [class.chat-selected]="id()">
       <aside class="conversation-list">
@@ -92,6 +99,7 @@ import { Icon } from "./shared";
                 [class.sent]="m.sender_id === auth.user()?.id"
               >
                 <p>{{ m.content }}</p>
+                @if (m.simulated) { <small>Resposta simulada</small> }
                 <time>{{ m.created_at | date: "dd/MM HH:mm" }}</time>
               </div>
             }
@@ -130,6 +138,7 @@ import { Icon } from "./shared";
     </section>`,
 })
 export class Chat implements OnInit, OnDestroy {
+  demo = demoMode;
   private api = inject(Api);
   auth = inject(Auth);
   private route = inject(ActivatedRoute);

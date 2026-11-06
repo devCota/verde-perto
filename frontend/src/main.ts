@@ -7,20 +7,23 @@ import {
   RouterLinkActive,
   Routes,
   withInMemoryScrolling,
+  withHashLocation,
 } from "@angular/router";
 import { provideHttpClient } from "@angular/common/http";
 import { registerLocaleData } from "@angular/common";
 import pt from "@angular/common/locales/pt";
 import { Auth, Notice, authGuard, errorText } from "./app/api";
 import { Icon } from "./app/shared";
+import { demoMode } from "./app/runtime";
 registerLocaleData(pt);
 
 @Component({
   standalone: true,
+  imports: [RouterLink],
   template: `<section class="wrap empty">
     <h1>Esse caminho ainda não foi cultivado.</h1>
     <p>A página que você procura não foi encontrada.</p>
-    <a href="/" class="button primary">Voltar ao início</a>
+    <a routerLink="/" class="button primary">Voltar ao início</a>
   </section>`,
 })
 class NotFound {}
@@ -99,15 +102,26 @@ const routes: Routes = [
   standalone: true,
   imports: [RouterOutlet, RouterLink, RouterLinkActive, Icon],
   template: `
-    <a href="#main" class="skip-link">Pular para o conteúdo</a>
+    <a href="#main" class="skip-link" (click)="skipToContent($event)">Pular para o conteúdo</a>
     <div class="top-note">
       Pequenas colheitas. Grandes conexões.
       <span>Feito para compartilhar.</span>
     </div>
+    @if (demo) {
+      <aside class="demo-banner" aria-label="Demonstração do VerdePerto">
+        <div class="wrap demo-banner-inner">
+          <p><strong>Demonstração interativa.</strong> Dados salvos só neste navegador. Use informações fictícias.</p>
+          <div class="demo-banner-actions">
+            <a routerLink="/entrar" class="text-link">{{ auth.user() ? "Trocar conta" : "Usar conta de teste" }}</a>
+            <button type="button" class="text-link" (click)="reset()">Recomeçar demonstração</button>
+          </div>
+        </div>
+      </aside>
+    }
     <header class="site-header">
       <div class="wrap header-inner">
         <a routerLink="/" class="brand" aria-label="VerdePerto início"
-          ><img src="/assets/logo.svg" alt="" width="38" height="38" /><span
+          ><img src="assets/logo.svg" alt="" width="38" height="38" /><span
             >Verde<span>Perto</span><small>cultivando conexões</small></span
           ></a
         >
@@ -162,11 +176,11 @@ const routes: Routes = [
         </div>
       </div>
     </header>
-    <main id="main"><router-outlet /></main>
+    <main id="main" tabindex="-1"><router-outlet /></main>
     <footer class="site-footer">
       <div class="wrap footer-inner">
         <a routerLink="/" class="brand"
-          ><img src="/assets/logo.svg" alt="" width="32" height="32" /><span
+          ><img src="assets/logo.svg" alt="" width="32" height="32" /><span
             >Verde<span>Perto</span></span
           ></a
         >
@@ -205,10 +219,26 @@ const routes: Routes = [
   `,
 })
 class App {
+  demo = demoMode;
   auth = inject(Auth);
   notice = inject(Notice);
   menu = signal(false);
   toggle = (v: boolean) => !v;
+  skipToContent(event: Event) {
+    event.preventDefault();
+    const main = document.getElementById("main");
+    main?.focus({ preventScroll: true });
+    main?.scrollIntoView();
+  }
+  async reset() {
+    if (!window.confirm("Recomeçar a demonstração? Contas, ofertas, fotos e mensagens criadas neste navegador serão apagadas. Os exemplos iniciais serão restaurados.")) return;
+    try {
+      await (await import("./app/demo-api")).resetDemo();
+      window.location.assign(new URL("./", document.baseURI).href);
+    } catch {
+      this.notice.show("Não foi possível restaurar os exemplos. Permita o armazenamento do site no navegador.");
+    }
+  }
   async logout() {
     try {
       await this.auth.logout();
@@ -222,6 +252,7 @@ bootstrapApplication(App, {
     provideHttpClient(),
     provideRouter(
       routes,
+      ...(demoMode ? [withHashLocation()] : []),
       withInMemoryScrolling({
         anchorScrolling: "enabled",
         scrollPositionRestoration: "enabled",

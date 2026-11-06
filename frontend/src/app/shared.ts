@@ -96,7 +96,7 @@ export class Icon implements OnChanges {
   template: ` <a class="offer-card" [routerLink]="['/ofertas', listing.id]">
     <div class="offer-photo">
       <img
-        [src]="listing.image_url || '/assets/product-default.svg'"
+        [src]="listing.image_url || 'assets/product-default.svg'"
         [alt]="listing.title"
         loading="lazy"
         (error)="imageFallback($event)"
@@ -152,6 +152,6 @@ export class Card {
   imageFallback(event: Event) {
     const image = event.target as HTMLImageElement;
     image.onerror = null;
-    image.src = "/assets/product-default.svg";
+    image.src = "assets/product-default.svg";
   }
 }
